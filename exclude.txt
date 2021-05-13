@@ -1,0 +1,11 @@
+.DS_Store
+pub/static/*
+var/cache/*
+var/view/view_preprocessed/*
+var/page_cache/*
+generated/code/
+var/session/*
+var/log/*
+cgi-bin/
+well-known/
+well-known/*

@@ -1,0 +1,10 @@
+# ignore .git and .cache folders
+magento2/.git
+.cache
+
+# ignore phpstorm
+.idea
+
+# ignore all markdown files (md) beside all README*.md other than README-secret.md
+*.md
+!README*.md

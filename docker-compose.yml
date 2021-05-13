@@ -1,0 +1,130 @@
+version: '3.0'
+services:
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}_web
+    image: ${WEB_SERVER}
+    #restart: always
+    #user: www-data:apache
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - mysql
+    volumes:
+    #  - magento-data:/var/www/html
+      - ${HOST_PATH_WEB_WWW}:/var/www/html
+
+    ## Website config
+      - ${DEVBOX_PATH}/config/${WEB_SERVER_NAME}/sites-enabled/:/etc/httpd/sites-enabled/
+      - ${DEVBOX_PATH}/config/${WEB_SERVER_NAME}/conf.d/ssl.conf:/etc/httpd/conf.d/ssl.conf
+
+    # composer config
+    # - ${DEVBOX_PATH}/config/composer/:/var/www/.composer/
+      - ${HOST_PATH_COMPOSER_CACHE}:/var/www/.composer/cache/
+
+    ## ssh config
+    # - ${DEVBOX_PATH}/config/ssh/:/var/www/.ssh/
+      - ${DEVBOX_PATH}/log:${WEBSERVER_LOG_DIR}
+    environment:
+       #UID=48
+       APACHE_USER_UID: ${NEW_UID}
+       APACHE_USER_GID: ${NEW_GID}
+       COMPOSER_PROCESS_TIMEOUT: 0
+    env_file:
+      - ".env"
+    networks:
+      - mynet
+
+  mysql:
+    container_name: ${COMPOSE_PROJECT_NAME}_db
+    image: ${MYSQL_SERVER}
+    user: mysql:mysql
+    restart: always
+    volumes:
+      - db-data:/usr/local/mysql/data
+      #- ${DEVBOX_PATH}/provision:/devbox/provision
+      - ${DEVBOX_PATH}/config/mysql/conf.d/override_auth.conf:/etc/mysql/conf.d/override_auth.conf
+    #command: --innodb-use-native-aio=0 --innodb-flush-method=O_DSYNC
+    env_file:
+      - ".env"
+    networks:
+      - mynet
+    ports:
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    container_name: ${COMPOSE_PROJECT_NAME}_adminer
+    restart: always
+    environment:
+        - ADMINER_DEFAULT_SERVER=mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - mynet
+
+  # ------------------------------------------------------------
+  # elasticsearch
+  # ------------------------------------------------------------
+  elasticsearch:
+    container_name: ${COMPOSE_PROJECT_NAME}_${ELASTICSEARCH_SERVICE_NAME}
+    image: ${ELASTICSEARCH_SERVICE}
+
+    environment:
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+      discovery.type: 'single-node'
+
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+    networks:
+      - mynet
+  # ------------------------------------------------------------
+  # Redis
+  # ------------------------------------------------------------
+  #    redis:
+  #        container_name: ${COMPOSE_PROJECT_NAME}_${REDIS_SERVER_NAME}
+  #        image: ${REDIS_SERVER}
+  #
+  #        networks:
+  #            mynet
+  #                #ipv4_address: ${IP_REDIS_SERVER}
+
+  # ------------------------------------------------------------
+  # Redis Commander
+  # ------------------------------------------------------------
+  #    redis-commander:
+  #        container_name: ${COMPOSE_PROJECT_NAME}_${REDIS_COMMANDER_SERVER_NAME}
+  #        image: ${REDIS_COMMANDER_SERVER}
+  #
+  #        environment:
+  #            REDIS_HOSTS: ${REDIS_COMMANDER_HOSTS}
+  #
+  #        networks:
+  #            mynet
+  #                #ipv4_address: ${IP_REDISCOMMANDER_SERVER}
+  #
+  #        #extra_hosts:
+  #            #- ${REDIS_SERVER_NAME}-server:${IP_REDIS_SERVER}
+
+  # ------------------------------------------------------------
+  # mailhog
+  # ------------------------------------------------------------
+  mailhog:
+      container_name: ${COMPOSE_PROJECT_NAME}_${MAILHOG_SERVICE_NAME}
+      image: ${MAILHOG_SERVICE}
+
+      ports:
+       - "1025:1025" # smtp server
+       - "8025:8025" # web ui
+
+      networks:
+        - mynet
+
+networks:
+  mynet:
+
+volumes:
+  #magento-data:
+  db-data:
