@@ -6,4 +6,4 @@ chmod +x ./n98-magerun2.phar && \
 echo 'alias magerun="./n98-magerun2.phar"' >> ~/.bash_aliases && \
 source ~/.bash_aliases
 
-magerun config:env:set 'x-frame-options' '*'
+#magerun config:env:set 'x-frame-options' '*'

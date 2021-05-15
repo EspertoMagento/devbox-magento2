@@ -13,6 +13,7 @@ services:
     volumes:
     #  - magento-data:/var/www/html
       - ${HOST_PATH_WEB_WWW}:/var/www/html
+      - ${DEVBOX_PATH}/provision:/var/www/provision
 
     ## Website config
       - ${DEVBOX_PATH}/config/${WEB_SERVER_NAME}/sites-enabled/:/etc/httpd/sites-enabled/
@@ -42,7 +43,7 @@ services:
     restart: always
     volumes:
       - db-data:/usr/local/mysql/data
-      #- ${DEVBOX_PATH}/provision:/devbox/provision
+      - ${DEVBOX_PATH}/provision:/devbox/provision
       - ${DEVBOX_PATH}/config/mysql/conf.d/override_auth.conf:/etc/mysql/conf.d/override_auth.conf
     #command: --innodb-use-native-aio=0 --innodb-flush-method=O_DSYNC
     env_file:
