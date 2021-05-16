@@ -1,4 +1,4 @@
-# **Magento 2.4 on Centos 7**
+# **Magento 2.4 on Centos 7 with Docker**
 
 Software installed on Docker Image:
 
