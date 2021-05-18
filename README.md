@@ -37,6 +37,7 @@ docker exec -it <container_name> install-magento
 Run this command to install sample-data:
 
 ```shell
+cp auth.json magento2/var/composer_home/
 docker exec -it <container_name> install-sampledata
 ```
 

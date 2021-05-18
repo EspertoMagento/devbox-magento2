@@ -75,7 +75,7 @@ RUN yum -y --setopt=tsflags=nodocs update \
 
 
 # Add Composer
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && /usr/local/bin/composer self-update --1
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && /usr/local/bin/composer self-update --2
 COPY ./auth.json $COMPOSER_HOME
 RUN chmod -R 777 $COMPOSER_HOME && chown -R $APACHE_USER:$APACHE_GROUP $COMPOSER_HOME
 
