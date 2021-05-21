@@ -40,7 +40,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_db
     image: ${MYSQL_SERVER}
     user: mysql:mysql
-    restart: always
+    #restart: always
     volumes:
       - db-data:/usr/local/mysql/data
       - ${DEVBOX_PATH}/provision:/devbox/provision
